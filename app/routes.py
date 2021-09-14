@@ -136,10 +136,8 @@ def upload():
             return redirect(request.url)       
         filename = secure_filename(file.filename)
         file.save(os.path.join(UPLOAD_FODER, filename))
-        user = User.get_user(request.cookies['username'])
-        user = User.update_avatar(user.username, filename)
+        user = User.update_avatar(request.cookies['username'], filename)
         res = make_response(redirect('/index'))
         res.set_cookie('avatar', user.avatar)
-        print(user.avatar)
         return res   
     return redirect('index')

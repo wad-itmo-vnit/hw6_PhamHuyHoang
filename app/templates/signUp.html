@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+</head>
+<body>
+    {% with messages = get_flashed_messages() %}  
+         {% if messages %}  
+               {% for message in messages %}  
+                    <p>{{ message }}</p>  
+               {% endfor %}  
+         {% endif %}  
+      {% endwith %}  
+    <div id="login" style="width: 300px; margin: auto;">
+        <h1 style="text-align: center;">Sign Up</h1>
+        <form action="/signUp" method="POST">
+            <input type="text" name="user" id="user" placeholder="User">    
+            <input type="password" name="password" id="password" placeholder="Password">
+            <input type="password" name="confirmPass" id="confirmPass" placeholder="Confirm Password">
+            <input type="submit" value="Sign Up">
+        </form>
+        <span>Already have an account?</span>
+        <span><a href="/signIn" style="font-weight: bold;">Sign In</a></span>
+</body>
+</html>

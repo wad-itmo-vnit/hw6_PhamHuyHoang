@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BTVN 5</title>
+    <link rel="stylesheet" href="/static/css/index.css">
+</head>
+<body>
+    {% with messages = get_flashed_messages() %}  
+         {% if messages %}  
+               {% for message in messages %}  
+                    <p>{{ message }}</p>  
+               {% endfor %}  
+         {% endif %}  
+      {% endwith %}  
+      <div id="blockUser" style="float: left;">
+        <div id='avatar'>
+            <img src="/app/upload/default-avatar.jpg" alt="error" style="width: 25px; height: 25px;vertical-align: middle; border-radius: 50%; ">
+        </div>
+        <h1 id="user"></h1>
+        <form action="/changePass">
+            <button type="submit" style="width: 90px; height: 40px;"> Change Password</button>
+            <button type="submit" formaction="/logOut" style="width: 90px; height: 40px;"> Log Out</button>
+        </form>
+    </div>  
+
+    <div class="container">
+        <div class="item"><img src="/static/pics/pic_1.jpg" alt="error"></div>
+        <div class="item"><img src="/static/pics/pic_2.jpg" alt="error"></div>
+        <div class="item"><img src="/static/pics/pic_3.jpg" alt="error"></div>
+        <div class="item"><img src="/static/pics/pic_4.jpg" alt="error"></div>
+        <div class="item"><img src="/static/pics/pic_5.jpg" alt="error"></div>
+        <div class="item"><img src="/static/pics/pic_6.jpg" alt="error"></div>
+        <div class="item"><img src="/static/pics/pic_7.jpg" alt="error"></div>
+        <div class="item"><img src="/static/pics/pic_8.jpg" alt="error"></div>
+        <div class="item"><img src="/static/pics/pic_9.jpg" alt="error"></div>
+        <div class="item"><img src="/static/pics/pic_10.jpg" id= 'pic_10' alt="error"></div>
+        
+    </div>
+
+   
+
+    <div class="modal">
+        <div class="close"><span>&times;</span></div>
+        <div class="modal-content"><img id="picModal" src=""></div>
+    </div>
+    
+    <script src="/static/js/index.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Change Password</title>
+</head>
+<body>
+    {% with messages = get_flashed_messages() %}  
+         {% if messages %}  
+               {% for message in messages %}  
+                    <p>{{ message }}</p>  
+               {% endfor %}  
+         {% endif %}  
+      {% endwith %}  
+    <div id="login" style="width: 300px; margin: auto;">
+        <h1 style="text-align: center;">Change Password</h1>
+        <form action="/changePass" method="POST">
+            <input type="password" name="currentPass" id="user" placeholder="Current Password">    
+            <input type="password" name="newPass" id="password" placeholder="New Password">
+            <input type="password" name="confirmPass" id="confirmPass" placeholder="Confirm Password">
+            <input type="submit" value="Save Changes">
+        </form>
+</body>
+</html>

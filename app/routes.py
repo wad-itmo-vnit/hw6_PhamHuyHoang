@@ -6,7 +6,12 @@ from functools import wraps
 from werkzeug.utils import secure_filename
 
 UPLOAD_FODER = app.config['UPLOAD_FODER'] 
+ALLOWED_EXTENSIONS = {'png','jpg', 'jpeg', 'git'}
 
+def allowed_file(filename):
+    return '.' in filename and \
+        filename.split('.')[1].lower() in ALLOWED_EXTENSIONS
+        
 
 def login (func):
     @wraps(func)
@@ -131,13 +136,16 @@ def upload():
             return redirect(request.url)
         
         file = request.files['file']
+        print(file)
         if file.filename == '':
             flash('No selected file!')
-            return redirect(request.url)       
-        filename = secure_filename(file.filename)
-        file.save(os.path.join(UPLOAD_FODER, filename))
-        user = User.update_avatar(request.cookies['username'], filename)
-        res = make_response(redirect('/index'))
-        res.set_cookie('avatar', user.avatar)
-        return res   
+            return redirect(request.url)   
+
+        if allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(UPLOAD_FODER, filename))
+            user = User.update_avatar(request.cookies['username'], filename)
+            res = make_response(redirect('/index'))
+            res.set_cookie('avatar', user.avatar)
+            return res   
     return redirect('index')

@@ -12,7 +12,7 @@ def find_user(username):
 
 
 class User:
-    def __init__(self, username, password, token = None, avatar = '/static/upload/default-avatar.jpg'):
+    def __init__(self, username, password, token = None, avatar = 'default-avatar.jpg'):
         self.username = username
         self.password = password
         self.token = token
@@ -28,11 +28,17 @@ class User:
         mongo.db.users.update({"username": self.username}, {"$set": {"token": self.token}})
 
     @classmethod
-    def update_avatar(cls, username, avatar):
-        avatar = "/static/upload/" + avatar
-        mongo.db.users.update({"username": username}, {"$set": {"avatar": avatar}})
+    def update_avatar(cls, username, avatarName,fileAvatar, currentAvatar):
+        if currentAvatar != 'default-avatar.jpg':
+            id= mongo.db.fs.files.find_one({"filename":currentAvatar}).get('_id')
+            mongo.db.fs.files.remove({'_id': id})
+            mongo.db.fs.chunks.remove({"files_id": id})
+        mongo.save_file(avatarName,fileAvatar)
+
+        mongo.db.users.update({"username": username}, {"$set": {"avatar": avatarName}})
         user = find_user(username)
         return cls(user[0]['username'], user[0]['password'], user[0]['token'], user[0]['avatar'])
+
 
     
     def check_session(self, token):

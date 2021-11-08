@@ -27,5 +27,4 @@ function getCookie(name) {
   }
 
 document.getElementById('username').innerHTML= getCookie('username');
-document.getElementById('avatar').src= getCookie('avatar');
 

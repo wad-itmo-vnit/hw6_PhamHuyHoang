@@ -4,7 +4,10 @@ from app.models.user import User
 import os
 from functools import wraps
 from werkzeug.utils import secure_filename
+from flask_pymongo import PyMongo
 
+
+mongo = PyMongo(app)
 UPLOAD_FODER = app.config['UPLOAD_FODER'] 
 ALLOWED_EXTENSIONS = {'png','jpg', 'jpeg', 'git'}
 
@@ -42,10 +45,11 @@ def no_login (func):
 def main():
    return redirect('/signIn')
 
-@app.route("/index")
+@app.route("/index", methods = ['GET'])
 @login
 def index():
-    return render_template("index.html")
+    currentAvatar= User.get_user(request.cookies['username']).avatar
+    return render_template("index.html", avatar = currentAvatar)
 
 @app.route("/signIn", methods=['POST','GET'])
 @no_login
@@ -62,8 +66,6 @@ def signIn():
                 res = make_response(redirect('/index'))
                 res.set_cookie('username', user.username)
                 res.set_cookie('token', user.token)
-                res.set_cookie('avatar', user.avatar)
-                print(user.avatar)
                 return res
             else:
                 flash('Invalid user or password!!!')
@@ -101,7 +103,6 @@ def logOut():
     res = make_response(redirect('/signIn'))
     res.delete_cookie('username')
     res.delete_cookie('token')
-    res.delete_cookie('avatar')
     return res
 
 @app.route("/changePass", methods=['GET','POST'])
@@ -128,24 +129,36 @@ def changePass():
             flash('Invalid password!!!')
             return redirect('/changePass')
 
-@app.route("/upload", methods = ['POST', 'GET'])
-def upload():
+@app.route("/upload", methods = ['POST','GET'])
+@login
+def upload(): 
+    if request.method == 'GET':
+        return redirect('/index')
+
     if request.method == 'POST':
         if 'file' not in request.files:
             flash('No file part')
             return redirect(request.url)
         
         file = request.files['file']
-        print(file)
+
         if file.filename == '':
             flash('No selected file!')
             return redirect(request.url)   
 
         if allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            file.save(os.path.join(UPLOAD_FODER, filename))
-            user = User.update_avatar(request.cookies['username'], filename)
-            res = make_response(redirect('/index'))
-            res.set_cookie('avatar', user.avatar)
-            return res   
-    return redirect('index')
+            currentAvatar= User.get_user(request.cookies['username']).avatar
+            user = User.update_avatar(request.cookies['username'], filename,file, currentAvatar)
+            return redirect('/index')
+         
+   
+
+@app.route("/uploads/<filename>")
+@login
+def getUpload(filename):
+    currentAvatar= User.get_user(request.cookies['username']).avatar
+    if filename == currentAvatar:
+        return mongo.send_file(filename)
+    else:
+        return redirect('/index')

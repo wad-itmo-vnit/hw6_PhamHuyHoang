@@ -36,9 +36,7 @@ class User:
         mongo.save_file(avatarName,fileAvatar)
 
         mongo.db.users.update({"username": username}, {"$set": {"avatar": avatarName}})
-        user = find_user(username)
-        return cls(user[0]['username'], user[0]['password'], user[0]['token'], user[0]['avatar'])
-
+       
 
     
     def check_session(self, token):

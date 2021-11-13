@@ -1,5 +1,5 @@
 from app import app
-from flask import render_template,redirect,request,flash, make_response
+from flask import render_template,redirect,request,flash, make_response, send_from_directory
 from app.models.user import User
 import os
 from functools import wraps
@@ -40,6 +40,8 @@ def no_login (func):
             pass
         return  func(*arg, **kwargs)
     return loginFunc
+
+
 
 @app.route('/')
 def main():
@@ -149,7 +151,7 @@ def upload():
         if allowed_file(file.filename):
             filename = secure_filename(file.filename)
             currentAvatar= User.get_user(request.cookies['username']).avatar
-            user = User.update_avatar(request.cookies['username'], filename,file, currentAvatar)
+            User.update_avatar(request.cookies['username'], filename,file, currentAvatar)
             return redirect('/index')
          
    
